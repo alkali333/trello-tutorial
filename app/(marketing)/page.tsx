@@ -53,7 +53,7 @@ const MarketingPage = () => {
         unique—accomplish it all with Taskify.
       </div>
       <Button className="mt-6" size="lg" asChild>
-        <Link href="/">Get Taskify for free now</Link>
+        <Link href="/sign-in">Get Taskify for free now</Link>
       </Button>
     </div>
   );
