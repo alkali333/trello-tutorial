@@ -1,5 +1,4 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher([
@@ -7,9 +6,16 @@ const isProtectedRoute = createRouteMatcher([
   "/organization(.*)",
 ]);
 
-export default clerkMiddleware((auth, req, res: NextFetchEvent) => {
+export default clerkMiddleware((auth, req) => {
   const { userId, orgId } = auth();
 
+  // if logged in with no orgId, redirect to org selection
+  if (userId && !orgId && req.nextUrl.pathname !== "/select-org") {
+    const orgSelection = new URL("/select-org", req.url);
+    return NextResponse.redirect(orgSelection);
+  }
+
+  // for logged in users, direct to org page or select org page
   if (!isProtectedRoute(req)) {
     if (orgId) {
       const orgPage = new URL(`/organization/${orgId}`, req.url);
@@ -21,6 +27,7 @@ export default clerkMiddleware((auth, req, res: NextFetchEvent) => {
     }
   }
 
+  // protect routes
   if (isProtectedRoute(req)) {
     auth().protect();
   }

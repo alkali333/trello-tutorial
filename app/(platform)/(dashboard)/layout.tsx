@@ -8,7 +8,6 @@ const dashboardLayout = ({ children }: dashboardLayoutProps) => {
   return (
     <div className="h-full flex flex-col">
       <Navbar />
-
       {children}
     </div>
   );
